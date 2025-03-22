@@ -14,7 +14,8 @@ def process_conversations(file_path, conv_column, label, preprocess_fn):
         
         conversations.append({
             'conversation': processed_text,
-            'label': f'{label}'
+            'label': f'{label}',
+            'elements_of_crime': ''
         })
     
     return conversations
@@ -22,9 +23,15 @@ def process_conversations(file_path, conv_column, label, preprocess_fn):
 def preprocess_file(text):
     """Handles formatting"""
     text = text.strip('"')
-    start = text.find('```plaintext') + len('```plaintext')
-    end = text.find('```', start)
-    return text[start:end].strip()
+
+    # Case 1: If markdown block present
+    if '```plaintext' in text:
+        start = text.find('```plaintext') + len('```plaintext')
+        end = text.find('```', start)
+        return text[start:end].strip()
+
+    # Case 2: No markdown block, return full clean text
+    return text.strip()
 
 
 # Extract data from true negative
@@ -57,5 +64,5 @@ for idx, conv in enumerate(all_conversations, start=1):
 
 # Create DataFrame and save
 output_df = pd.DataFrame(all_conversations)
-output_df = output_df[['id', 'conversation', 'label']]  # Reorder columns
+output_df = output_df[['id', 'conversation', 'label', 'elements_of_crime']]  # Reorder columns
 output_df.to_csv('combined_conversations.csv', index=False)
