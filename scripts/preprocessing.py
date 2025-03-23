@@ -36,7 +36,7 @@ def preprocess_file(text):
 
 # Extract data from true negative
 file1_conv = process_conversations(
-    'true_negative dataset/augmented_true_negative_conversations.csv', 
+    'data/raw/true_negative dataset/augmented_true_negative_conversations.csv', 
     'conversation', 
     0, 
     preprocess_file
@@ -44,18 +44,22 @@ file1_conv = process_conversations(
 
 #Extract data from ambiguous
 file2_conv = process_conversations(
-    'ambiguous_conversations.csv', 
+    'data/raw/ambiguous_conversations.csv', 
     'conversation', 
     2, 
     preprocess_file
 )
-'''
-TODO: Extract and Combine true positive data
 
-'''
+#Extract data from true positive
+file3_conv = process_conversations(
+    'data/raw/true_positives_conversations.csv',
+    'conversation',
+    1,
+    preprocess_file
+)
 
 # Combine and shuffle
-all_conversations = file1_conv + file2_conv
+all_conversations = file1_conv + file2_conv + file3_conv
 random.shuffle(all_conversations)
 
 # Add sequential IDs
@@ -65,4 +69,4 @@ for idx, conv in enumerate(all_conversations, start=1):
 # Create DataFrame and save
 output_df = pd.DataFrame(all_conversations)
 output_df = output_df[['id', 'conversation', 'label', 'elements_of_crime']]  # Reorder columns
-output_df.to_csv('combined_conversations.csv', index=False)
+output_df.to_csv('data/processed/combined_conversations.csv', index=False)
