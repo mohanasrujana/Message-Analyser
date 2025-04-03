@@ -77,6 +77,7 @@ pip install -r requirements.txt
 |
 ├── results/
 |   ├── predicted_result.csv
+|   ├── predicted_result_gemma_2b.csv
 |   ├── raw_analysis.csv
 |
 ├── scripts/
@@ -84,6 +85,7 @@ pip install -r requirements.txt
 |   |   ├── cli.py
 |   |   ├── server_info.md
 |   |   ├── server.py
+|   |   ├── server_gemma_2b.py
 |   ├── jupyter_notebooks/
 |   |   ├── Message_Analyser_Message_Generation.ipynb
 |   |   ├── Message_Analyser_QuestionGeneration.ipynb
@@ -115,8 +117,7 @@ pip install -r requirements.txt
 - No longer used for MVP
 
 ### **ONNX Inference Script (`run_onnx_inference.py`)**
-- Loads the ONNX model and performs inference on a given image.
-- Returns **predicted category** and **most probable attributes**.
+- Loads the ONNX model and performs inference on a given conversation.
 - This was part of the product building process; No longer used/required for MVP
 
 ### **Command Line Interface (CLI) (`cli.py`)**
@@ -124,7 +125,6 @@ pip install -r requirements.txt
 
 ### **Flask-ML API (`server.py`)**
 - Deploys the model as a web API.
-- Accepts image uploads and returns predictions.
 
 ---
 
@@ -196,6 +196,8 @@ Your output will be a CSV with the following format:
 1. **Add support for more models via toggle (e.g., Gemma ONNX, Mistral Ollama)** 
 
 2. **Improve hallucination filtering and accuracy**
+
+3. **Improve the gemma model to give accurate results**
 
 
 ## Authors
