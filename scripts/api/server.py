@@ -3,12 +3,13 @@ import time
 import traceback
 import logging
 from pathlib import Path
-from typing import TypedDict
+from enum import Enum
+from typing import Literal, TypedDict
 from functools import lru_cache
 from flask_ml.flask_ml_server import MLServer
 from flask_ml.flask_ml_server.models import (
     ResponseBody, FileResponse, FileType, InputSchema, ParameterSchema, 
-    InputType, TextParameterDescriptor, TaskSchema, FileInput, DirectoryInput
+    InputType, TextParameterDescriptor, EnumParameterDescriptor, TaskSchema, FileInput, DirectoryInput, EnumVal
 )
 from model_registry import load_model
 from pipeline.file_loader import load_input_df
@@ -32,6 +33,11 @@ def get_inference_engine():
     model_name = os.environ.get("MODEL_NAME", "mistral")
     return load_model(model_name)
 
+# Define the model type
+class ModelType(str, Enum):
+    GEMMA3   = "GEMMA3"
+    MISTRAL7B = "MISTRAL7B"
+
 # Define input and parameter types for Flask ML
 class CrimeAnalysisInputs(TypedDict):
     """
@@ -51,6 +57,7 @@ class CrimeAnalysisParameters(TypedDict):
         include_all_messages: Whether to include all messages or only those with crime elements.
     """
     elements_of_crime: str
+    model_type: str
 
 # Define the UI schema for the task
 def create_crime_analysis_task_schema() -> TaskSchema:
@@ -79,10 +86,23 @@ def create_crime_analysis_task_schema() -> TaskSchema:
             default="Actus Reus,Mens Rea"
         )
     )
+
+    model_schema = ParameterSchema(
+        key="model_type",
+        label="Model to use for analysis",
+        subtitle="Choose GEMMA3 or MISTRAL7B",
+        value=EnumParameterDescriptor(
+            enum_vals=[
+                EnumVal(key=mt.value, label=mt.name)  
+                for mt in ModelType
+            ],
+            default=ModelType.MISTRAL7B.value,
+        ),
+    )
     
     return TaskSchema(
         inputs=[input_schema,output_schema],  # Only input is the CSV file
-        parameters=[elements_of_crime_schema]
+        parameters=[elements_of_crime_schema,model_schema]
     )
 
 # Add application metadata
@@ -106,7 +126,14 @@ def analyze_conversations(inputs: CrimeAnalysisInputs, parameters: CrimeAnalysis
         # Extract the csv into a dataframe
         df = load_input_df(inputs)
         crime_elements = parameters.get("elements_of_crime", "Actus Reus,Mens Rea")
-        file_response = process_conversations(df, inputs["output_file"].path, crime_elements) 
+        raw_model_type = parameters.get("model_type", ModelType.MISTRAL7B.value).upper()
+
+        try:
+            model_type = ModelType(raw_model_type)
+        except ValueError:
+            raise ValueError(f"model_type must be one of {[m.value for m in ModelType]}")
+
+        file_response = process_conversations(df, inputs["output_file"].path, crime_elements, model_type) 
         return ResponseBody(file_response)
     except Exception as e:
         logger.error(f"Error analyzing conversations: {str(e)}")
