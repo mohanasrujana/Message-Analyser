@@ -15,13 +15,16 @@ logger = logging.getLogger("inference-runner")
 
 
 @lru_cache(maxsize=1)
-def get_inference_engine():
-    model_name = os.environ.get("MODEL_NAME", "gemma")
+def get_inference_engine(model_type):
+    if(model_type == "GEMMA3B"):
+        model_name = "gemma"
+    else:
+        model_name = "mistral"
     return load_model(model_name)
 
-def process_conversations(df: pd.DataFrame, output_path: str, crime_elements:str) -> FileResponse:
+def process_conversations(df: pd.DataFrame, output_path: str, crime_elements:str, model_type:str) -> FileResponse:
     start_time = time.time()
-    engine = get_inference_engine()
+    engine = get_inference_engine(model_type)
     results = []
     RESULTS_DIR = Path(output_path)
     RESULTS_FILE = RESULTS_DIR / "predicted_result.csv"
