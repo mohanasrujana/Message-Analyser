@@ -4,17 +4,28 @@ import traceback
 import logging
 from pathlib import Path
 from enum import Enum
-from typing import Literal, TypedDict
+from typing import TypedDict
 from functools import lru_cache
 from flask_ml.flask_ml_server import MLServer
 from flask_ml.flask_ml_server.models import (
-    ResponseBody, FileResponse, FileType, InputSchema, ParameterSchema, 
-    InputType, TextParameterDescriptor, EnumParameterDescriptor, TaskSchema, FileInput, DirectoryInput, EnumVal
+    ResponseBody,
+    FileResponse,
+    FileType,
+    InputSchema,
+    ParameterSchema,
+    TaskSchema,
+    TextParameterDescriptor,
+    EnumParameterDescriptor,
+    EnumVal,
+    BatchFileInput,
+    DirectoryInput,
+    InputType,
 )
 from model_registry import load_model
-from pipeline.file_loader import load_input_df
+#from pipeline.file_loader import load_input_df
+from pipeline.crime_analysis_input_handler import CrimeAnalysisInputsHandler
 from pipeline.inference_runner import process_conversations
-
+import pandas as pd
 
 # Configure logging
 logging.basicConfig(
@@ -44,9 +55,9 @@ class CrimeAnalysisInputs(TypedDict):
     Defines the expected input structure for the crime analysis task.
     
     Attributes:
-        input_file: Path to the CSV file containing conversations.
+        input_files: Paths to the CSV file/files containing conversations.
     """
-    input_file: FileInput
+    input_files: BatchFileInput      # a batch of CSV files
     output_file: DirectoryInput
 
 class CrimeAnalysisParameters(TypedDict):
@@ -68,9 +79,9 @@ def create_crime_analysis_task_schema() -> TaskSchema:
         TaskSchema: A schema defining the required inputs and configurable parameters.
     """
     input_schema = InputSchema(
-        key="input_file",
-        label="CSV file containing conversations",
-        input_type=InputType.FILE,
+        key="input_files",
+        label="CSV files containing conversations",
+        input_type=InputType.BATCHFILE, 
     )
     output_schema = InputSchema(
         key="output_file",
@@ -124,7 +135,9 @@ def analyze_conversations(inputs: CrimeAnalysisInputs, parameters: CrimeAnalysis
 
     try:
         # Extract the csv into a dataframe
-        df = load_input_df(inputs)
+        handler = CrimeAnalysisInputsHandler(inputs)
+        df = handler.load_input_df()  # DataFrame with a "conversation" column
+        #df = load_input_df(inputs)
         crime_elements = parameters.get("elements_of_crime", "Actus Reus,Mens Rea")
         raw_model_type = parameters.get("model_type", ModelType.MISTRAL7B.value).upper()
 
