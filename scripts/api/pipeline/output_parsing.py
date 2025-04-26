@@ -4,12 +4,12 @@ from typing import List, Dict
 from pathlib import Path
 import pandas as pd
 from fpdf import FPDF
+import unicodedata
 
 class OutputParser:
-    def __init__(self, output_dir: str, output_file_type: str, use_case: int):
+    def __init__(self, output_dir: str, output_file_type: str):
         self.output_dir = output_dir
         self.output_file_type = output_file_type
-        self.use_case = use_case
         self.result_dir = Path(output_dir)
         self.result_dir.mkdir(parents=True, exist_ok=True)
 
@@ -58,7 +58,16 @@ class OutputParser:
         result["Answer"] = answer
         result["Evidence"]["message_text"] = evidence
         return result
-    
+
+
+    def clean_text_for_pdf(self, text: str) -> str:
+        """
+        Converts fancy unicode characters to closest ASCII equivalents.
+        """
+        if not isinstance(text, str):
+            return text
+        return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
+
     def save_to_file(self, results: List[Dict]):
         rows = []
         for i, result in enumerate(results):
@@ -92,13 +101,14 @@ class OutputParser:
             pdf.add_page()
             pdf.set_font("Arial", size=12)
             for _, row in df.iterrows():
+                clean_message = self.clean_text_for_pdf(row['message_text'])
                 pdf.multi_cell(0, 10, f"{row['conversation_id']} | {row['category']} | {row['message_text']}\n")
             pdf.output(str(output_base.with_suffix(".pdf")))
         else:
             raise ValueError(f"Unsupported file type: {self.output_file_type}")
 
 if __name__ == "__main__":
-    opt = OutputParser(output_dir="./test_outputs", output_file_type="csv", use_case=3)
+    opt = OutputParser(output_dir="../../../data/test_outputs_parsing", output_file_type="xlsx")
 
     # Example 1: Proper Yes Evidence
     model_output_yes = """

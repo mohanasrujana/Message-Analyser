@@ -32,8 +32,8 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
         Expected Output:
         Yes. Evidence:
         Actus Reus:
-        Message 1: I smashed the window and climbed inside.
-        Message 2: I grabbed the jewelry and ran out.
+        [Message 1 - Name]: I smashed the window and climbed inside.
+        [Message 2 - Name]: I grabbed the jewelry and ran out.
         """
     
     elif use_case == 2:
@@ -50,8 +50,8 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
         Expected Output:
         Yes. Evidence:
         Mens Rea:
-        Message 1: We should plan the robbery carefully.
-        Message 2: I'll study the security system tonight.
+        [Message 1 - Name]: We should plan the robbery carefully.
+        [Message 2 - Name]: I'll study the security system tonight.
         """
     
     elif use_case == 3:
@@ -71,8 +71,8 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
         Expected Output:
         Yes. Evidence:
         Distrust or Suspicion:
-        Message 1: Are you sure this plan will work?
-        Message 2: I don't trust him with the money.
+        [Message 1 - Name]: Are you sure this plan will work?
+        [Message 2 - Name]: I don't trust him with the money.
         """
     else:
         raise ValueError(f"Invalid use_case: {use_case}. Must be 1 (Actus Reus), 2 (Mens Rea), or 3 (Custom Prompt).")
@@ -132,14 +132,12 @@ def generate_text(prompt: str) -> str:
         )
         return response["message"]["content"]
     except Exception as e:
-        # logger.error(f"Ollama generation error: {str(e)}")
         return f"Error: {str(e)}"
-
 
     
 
 if __name__ == "__main__":
-    opt = OutputParser(output_dir="./test_outputs", output_file_type="csv", use_case=3)
+    opt = OutputParser(output_dir="../../../data/test_outputs_parsing", output_file_type="csv")
     df = pd.read_csv("../../../true_positives_conversations.csv")
     sample = df.iloc[0]
     prompt_text = sample["config"]
