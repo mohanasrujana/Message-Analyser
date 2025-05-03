@@ -1,7 +1,6 @@
 # pipeline/prompt_builder.py
 import ollama
 from output_parsing import OutputParser
-from file_loader import load_input_df
 from pathlib import Path 
 import pandas as pd
 
@@ -21,38 +20,67 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
     if use_case == 1:
         crime_element = "Actus Reus"
         no_element_response = "No. There is no element of Actus Reus in the conversation."
+        rule = """
+        - ONLY include messages that contain **concrete or likely physical actions** involved in the criminal act."""
+        definition = "Actus Reus refers to the physical act of committing a crime, such as theft, assault, tampering, or destruction."
         gold_example = """
-        GOLD EXAMPLE:
+    GOLD EXAMPLE:
 
-        Conversation:
-        [Message 1] Liam: I smashed the window and climbed inside.
-        [Message 2] Rachel: I grabbed the jewelry and ran out.
-        [Message 3] Emily: Did you see the new bakery opening downtown?
+    Conversation:
+    [Message 1] Liam: I smashed the window and climbed inside.
+    [Message 2] Rachel: I grabbed the jewelry and ran out.
+    [Message 3] Emily: Did you see the new bakery opening downtown?
 
-        Expected Output:
-        Yes. Evidence:
-        Actus Reus:
-        [Message 1 - Name]: I smashed the window and climbed inside.
-        [Message 2 - Name]: I grabbed the jewelry and ran out.
+    Expected Output:
+    Yes. Evidence:
+    Actus Reus:
+    [Message 1 - Name]: I smashed the window and climbed inside.
+    [Message 2 - Name]: I grabbed the jewelry and ran out.
         """
-    
+        include = f"""
+    INCLUDE:
+    - Messages describing actual physical actions (e.g., breaking, poisoning, cleaning evidence).
+    - Messages about **altering**, **removing**, or **tampering** with objects, locations, or evidence.
+    - Messages that describe **carrying out** the plan (not just planning).
+    - Any message where the speaker **admits to or describes doing something criminal**, even indirectly.
+    - Planning messages (e.g., “Let’s do X”, "We should ....") are not Actus Reus unless the speaker also refers to carrying it out.
+    ---
+        """
     elif use_case == 2:
         crime_element = "Mens Rea"
         no_element_response = "No. There is no element of Mens Rea in the conversation."
-        gold_example = """
-        GOLD EXAMPLE:
-
-        Conversation:
-        [Message 1] Liam: We should plan the robbery carefully.
-        [Message 2] Rachel: I'll study the security system tonight.
-        [Message 3] Emily: Are you coming to the party tomorrow?
-
-        Expected Output:
-        Yes. Evidence:
-        Mens Rea:
-        [Message 1 - Name]: We should plan the robbery carefully.
-        [Message 2 - Name]: I'll study the security system tonight.
+        definition = "Mens Rea refers to the mental state or intent to commit a crime — such as planning, desire, awareness, knowledge of wrongdoing, or willingness to cause harm."
+        rule = """
+    - Do NOT include emotions, reactions, or vague feelings unless they clearly show intent or knowledge of guilt.
+    - ONLY include messages that reflect **intent, knowledge, or motivation** behind the crime.
         """
+        include = f"""
+    INCLUDE:
+    - Messages that indicate intent, desire, or willingness to commit a crime.
+    - Messages where the speaker acknowledges guilt, knows the consequences, or tries to hide the truth.
+    - Statements showing planning, premeditation, or strategic thinking about a crime.
+    - Any message reflecting awareness of wrongdoing or motivation behind an act.
+    - Even indirect admissions or references showing mental preparation or willingness to commit the crime should be included.
+
+    Planning a crime, even if not acted upon, **can be Mens Rea**.
+    Emotional expressions like fear, regret, or relief do **not count** unless they clearly show knowledge or intent.
+    
+    ---    
+"""
+        gold_example = f"""
+    GOLD EXAMPLE:
+
+    Conversation:
+    [Message 1] Liam: We should plan the robbery carefully.
+    [Message 2] Rachel: I'll study the security system tonight.
+    [Message 3] Emily: Are you coming to the party tomorrow?
+
+    Expected Output:
+    Yes. Evidence:
+    Mens Rea:
+    [Message 1 - Liam]: We should plan the robbery carefully.
+    [Message 2 - Rachel]: I'll study the security system tonight.
+    """
     
     elif use_case == 3:
         crime_element = custom_prompt if custom_prompt else "Relevant Messages"
@@ -70,7 +98,7 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
 
         Expected Output:
         Yes. Evidence:
-        Distrust or Suspicion:
+        Relevant Messages:
         [Message 1 - Name]: Are you sure this plan will work?
         [Message 2 - Name]: I don't trust him with the money.
         """
@@ -78,48 +106,97 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
         raise ValueError(f"Invalid use_case: {use_case}. Must be 1 (Actus Reus), 2 (Mens Rea), or 3 (Custom Prompt).")
     
     # Build final prompt
-    prompt = f"""
-    You are a forensic conversation analyst specializing in detecting **{crime_element}** from chat conversations.
+    if use_case == 1 or use_case == 2:
+        prompt = f"""
+        You are a forensic conversation analyst specializing in detecting {crime_element} from chat conversations.
+        {crime_element} Definition: {definition}
+        Your job is to carefully read the conversation and extract only the messages that match the definition of {crime_element}.
 
-    Your job is to carefully read the conversation and extract only the messages that match the definition of {crime_element}.
+        ---
 
-    ---
+        DO NOT:
+        - Do NOT paraphrase, summarize, or explain.
+        - Do NOT guess or assume hidden meanings beyond what is stated.
+        - Do NOT include observations, interpretations, or conclusions.{rule}
 
-    DO NOT:
-    - Do NOT paraphrase, summarize, or explain.
-    - Do NOT guess or assume hidden meanings.
-    - Do NOT include observations, interpretations, or conclusions.
-    - ONLY output if there is clear evidence matching {crime_element}.
+        ---
+        {include}
 
-    ---
+        STRICT OUTPUT FORMAT:
+        Yes. Evidence:
+        {crime_element}:
+        [Message 1 - Name]: <exact message text>
+        [Message 2 - Name]: <exact message text>
 
-    STRICT OUTPUT FORMAT:
-    Yes. Evidence:
-    {crime_element}:
-    [Message 1 - Name]: <exact message text>
-    [Message 2 - Name]: <exact message text>
+        If no relevant messages are found, output exactly:
+        {no_element_response}
 
-    If no relevant messages are found, output exactly:
-    {no_element_response}
+        ---
 
-    ---
+        INCORRECT FORMATS (DO NOT DO THIS):
+        - {crime_element}: They probably meant something criminal.
+        - {crime_element}: Someone sounded suspicious.
+        - Any summaries, bullet points, or assumptions.
+        
+        ---
 
-    INCORRECT FORMATS (DO NOT DO THIS):
-    - {crime_element}: They probably meant something criminal.
-    - {crime_element}: Someone sounded suspicious.
-    - Any summaries, bullet points, or assumptions.
+        {gold_example}
 
-    {gold_example}
+        ---
 
-    ---
+        Now analyze the following conversation:
 
-    Now analyze the following conversation:
+        {conversation}
 
-    {conversation}
+        ---
+        Extract your output below:
+        """
+    elif use_case == 3:
+        prompt = f"""
+        You are a forensic conversation analyst. Your job is to analyze chat conversations and extract only the messages that match the user’s specific instruction.
+        
+        ---
+        USER INSTRUCTION:
+        {custom_prompt}  
 
-    ---
-    Extract your output below:
-    """
+        ---
+
+        DO NOT:
+        - Do NOT paraphrase, summarize, or explain.
+        - Do NOT guess or assume hidden meanings beyond what is stated.
+        - Do NOT include interpretations, opinions, or conclusions.
+        - ONLY include exact messages that clearly satisfy the user instruction.
+
+        ---
+
+        STRICT OUTPUT FORMAT:
+        Yes. Evidence:
+        Relevant Messages:
+        [Message X - Name]: <exact message text>
+        [Message Y - Name]: <exact message text>
+
+        If no relevant messages are found, output exactly:
+        No. There is no message that matches the instruction in the given conversation.
+
+        ---
+
+        INCORRECT FORMATS (DO NOT DO THIS):
+        - Relevant Messages: They probably meant something related.
+        - Relevant Messages: Someone sounded off.
+        - Any summaries, assumptions, or paraphrased content.
+
+        {gold_example}
+
+        ---
+
+        Now analyze the following conversation:
+
+        {conversation}
+
+        ---
+        Extract your output below:
+        ---
+        """
     
     return prompt
 
@@ -138,16 +215,18 @@ def generate_text(prompt: str) -> str:
 
 if __name__ == "__main__":
     opt = OutputParser(output_dir="../../../data/test_outputs_parsing", output_file_type="csv")
-    df = pd.read_csv("../../../true_positives_conversations.csv")
+    df = pd.read_csv("./true_positives_conversations.csv")
     sample = df.iloc[0]
-    prompt_text = sample["config"]
+    config_text = sample["config"]
     conversation_text = sample["conversation"]
+
+    prompt_text = "Find a message where the age is been asked"
 
     raw_outputs = []
      # --- Use Case 1: Actus Reus ---
-    prompt_1 = build_prompt(conversation_text, use_case=1)
-    model_output_1 = generate_text(prompt_1)
-    raw_outputs.append(model_output_1)
+    # prompt_1 = build_prompt(conversation_text, use_case=1)
+    # model_output_1 = generate_text(prompt_1)
+    # raw_outputs.append(model_output_1)
 
     # --- Use Case 2: Mens Rea ---
     prompt_2 = build_prompt(conversation_text, use_case=2)
