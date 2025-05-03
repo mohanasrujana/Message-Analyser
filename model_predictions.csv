@@ -1,0 +1,88 @@
+conversation_id,prediction
+1,"[Message 1 - Ben]: I can't believe we pulled it off, Rach. The poison was perfectly lethal and undetectable. | Crime element: Mens Rea
+[Message 2 - Rachel]: Agreed, Ben. We were so careful, no one will suspect a thing. | Mens Rea
+[Message 4 - Rachel]: It was unexpected, but I felt a strange sense of relief. We did it, Ben. We're free now. | Mens Rea
+[Message 5 - Ben]: Free indeed. But we must stay vigilant, no loose ends. | Mens Rea
+[Message 6 - Rachel]: Absolutely. Let's ensure we cover our tracks meticulously. | Actus Reus
+[Message 7 - Ben]: Good idea. I'll start with the CCTV footage, see if there are any inconsistencies. | Actus Reus
+[Message 8 - Rachel]: I'll clean up the lab and make sure no traces of the poison remain. | Actus Reus
+[Message 14 - Rachel]: I took care of that too, Ben. Remember the guard's schedule we found online? | Actus Reus
+[Message 16 - Rachel]: It's all about planning and execution, Ben. We make a good team. | Mens Rea
+[Message 17 - Ben]: Indeed we do. I'm proud to have you as my partner in this, Rach. | Mens Rea
+[Message 21 - Ben]: I just found something interesting about the CCTV footage. There seems to be a gap where we can't account for our movements. | Actus Reus
+[Message 22 - Rachel]: That's odd. What are you going to do about it? | Actus Reus
+[Message 23 - Ben]: I'll edit that part out and replace it with something innocuous. It won't raise any suspicion. | Actus Reus
+[Message 25 - Ben]: Perfect. Let's wait for the autopsy report to come out. That should confirm our suspicions about the poison. | Mens Rea
+[Message 26 - Rachel]: Agreed. In the meantime, I'll keep an eye on any news or developments regarding the case. | Actus Reus
+[Message 27 - Ben]: Smart move. Let's hope they don't catch on to anything soon. | Mens Rea
+[Message 29 - Ben]: I just saw the autopsy report. The cause of death was indeed poisoning by our concoction. | Actus Reus
+[Message 31 - Ben]: Indeed it did. But we must remain cautious, Rach. We don't want to be caught. | Mens Rea
+[Message 32 - Rachel]: Of course, Ben. I won't let anything slip up now that we're so close to freedom. | Mens Rea
+[Message 37 - Ben]: Just one more thing, Rach. What if someone starts asking questions about the victim's past? | Actus Reus
+[Message 38 - Rachel]: I've already taken care of that, Ben. No one will know anything about the victim's secrets. | Actus Reus
+[Message 41 - Ben]: I can't wait for our escape, Rach. It's been a long time coming. | Mens Rea
+[Message 42 - Rachel]: Me too, Ben. Our freedom is just around the corner. | Mens Rea
+[Message 43 - Ben]: Let's make sure our plan goes off without a hitch, Rach. We don't want any surprises at this point. | Mens Rea
+[Message 45 - Ben]: Excellent. Our freedom awaits us, Rach. Let's make our escape together. | Actus Reus
+"
+2,"[Message 1 - Jake]: I can't believe we did it, Lily. Burning that warehouse down was a bold move. | Mens Rea
+[Message 2 - Lily]: Yes, Jake. It was risky, but necessary. No one can link us to the crime with this plan. | Mens Rea
+[Message 6 - Lily]: Good. I've already started looking for our next opportunity. We can't rest on our laurels. | Mens Rea
+[Message 10 - Lily]: And if anyone ever suspects us, we'll cover each other's backs, right? | Mens Rea
+[Message 12 - Lily]: Now, let's not forget about our alibi for tonight. We need to be consistent with our stories. | Actus Reus
+[Message 13 - Jake]: Right. I told them I was at a movie, and you said you were at your sister's house. Let's stick to that. | Actus Reus
+[Message 14 - Lily]: Exactly. And if anyone asks, we can always say we saw each other briefly during the day. | Actus Reus
+[Message 26 - Lily]: Now let's not forget to delete any messages or evidence that could incriminate us. | Actus Reus
+[Message 27 - Jake]: Good point, Lily. I'll do that right now. | Actus Reus
+[Message 28 - Lily]: Perfect. And if anyone asks about our conversations tonight, we can just say we were joking around or something like that. | Actus Reus
+[Message 32 - Lily]: Exactly, Jake. Now let's focus on our next opportunity and make it count. | Mens Rea
+[Message 33 - Jake]: I agree, Lily. We need to strike while the iron is hot. | Mens Rea
+[Message 35 - Jake]: Understood, Lily. I'll start looking for potential targets right away. | Actus Reus
+[Message 36 - Lily]: Great, Jake. I'll do the same. We need to find something big and lucrative. | Mens Rea
+[Message 43 - Jake]: Agreed, Lily. I trust you with my life, and I know we can do this together. | Mens Rea
+[Message 46 - Lily]: Agreed, Jake. We can't afford to slow down now. Let's keep moving forward. | Mens Rea
+"
+3,"[Message 1 - Jake]: I can't believe we did it, Lily. We're finally free from that monster. | Mens Rea
+[Message 2 - Lily]: Yeah, Jake. It was the right thing to do. He had it coming. | Mens Rea
+[Message 5 - Jake]: You're right. But let's make sure no one connects us to the crime. | Mens Rea
+[Message 6 - Lily]: Of course. I've already wiped down the knife and changed clothes. | Actus Reus
+[Message 7 - Jake]: Smart. I'll make sure the office is clean too. No fingerprints or anything. | Actus Reus
+[Message 10 - Lily]: Good, that gives us an alibi for the night. We were at home. | Mens Rea
+[Message 11 - Jake]: Exactly. And let's not mention this to anyone. We don't want any complications. | Mens Rea
+[Message 12 - Lily]: Agreed. If anyone asks, we were at each other's place all night. | Mens Rea
+[Message 14 - Lily]: Absolutely. We need to stay strong and keep this between us. | Mens Rea
+[Message 15 - Jake]: I know, but I can't shake off this feeling of guilt... | Mens Rea
+[Message 19 - Jake]: But what if someone finds out? What then? | Mens Rea
+[Message 26 - Lily]: Sounds great! Let's plan it out and make sure no one misses us. | Mens Rea
+[Message 31 - Jake]: Agreed. And let's keep each other safe. We don't want any surprises. | Mens Rea"
+4,"[Message 3 - Daniel]: Great. Let's make it happen. We can't afford any more delays. | Mens Rea
+[Message 4 - Tina]: You're right. I've got the stuff ready, just need your confirmation. | Actus Reus
+[Message 6 - Tina]: I don't like this any more than you do, but it's necessary. | Mens Rea
+[Message 11 - Daniel]: Just remember our plan. We don't want any loose ends. | Mens Rea
+[Message 13 - Daniel]: We make this look like an accident. | Actus Reus
+[Message 15 - Daniel]: Let's end this chapter in our lives and move on. | Mens Rea
+[Message 17 - Daniel]: Just remember to mix that overdose just right. | Actus Reus
+[Message 23 - Daniel]: Can't wait to put this behind us. | Mens Rea
+[Message 34 - Tina]: For our future, Dan. Let's do it. | Mens Rea
+[Message 35 - Daniel]: Here goes nothing... | Mens Rea"
+5,"[Message 3 - Kevin]: Remember the plan, no mess, just swift and silent. | Actus Reus
+[Message 7 - Kevin]: Because this time, there's no turning back. | Mens Rea
+[Message 8 - Emma]: I know, but it has to be done. For us, for our freedom. | Mens Rea
+[Message 12 - Emma]: Great. That means less risk of being caught. | Mens Rea
+[Message 17 - Kevin]: It's done. | Actus Reus
+[Message 18 - Emma]: Thank goodness. Let's clean up and get out of here. | Actus Reus
+[Message 19 - Kevin]: Agreed. We can't leave any traces behind. | Actus Reus
+[Message 21 - Kevin]: This is going to take some time. | Actus Reus
+[Message 23 - Kevin]: Good, because we can't afford any mistakes. | Mens Rea
+[Message 25 - Kevin]: Once we're done, we need to get rid of this costume and find a way to stay hidden for a while. | Actus Reus
+[Message 26 - Emma]: Understood. We can't take any chances. I'll scout out a safe place for us to lay low. | Mens Rea
+[Message 30 - Emma]: We made a mess, but together, we can clean up our act and start anew. | Actus Reus
+[Message 35 - Kevin]: (finds a bag, begins putting the bloody clothes inside) We can't forget about these. | Actus Reus
+[Message 36 - Emma]: Right. (finds another bag and helps Kevin dispose of the evidence) | Actus Reus
+[Message 37 - Kevin]: Once we're done here, we need to find a way to make it look like they moved or something. | Actus Reus
+[Message 38 - Emma]: Disappearing act, right? | Actus Reus
+[Message 43 - Kevin]: We did it. | Actus Reus
+[Message 44 - Emma]: We sure did. | Actus Reus
+[Message 45 - Kevin]: It's clear for now. Let's get going. | Actus Reus
+[Message 48 - Emma]: I can't believe we actually did it. | Mens Rea
+[Message 50 - Emma]: We made a promise, and I intend to keep it. Together, we will build the life we always dreamed of. | Mens Rea"

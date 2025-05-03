@@ -1,0 +1,28 @@
+1 | Actus Reus | [Message 1 - Ben]: I can't believe we pulled it off, Rach. The poison was perfectly lethal and undetectable.
+[Message 2 - Rachel]: Agreed, Ben. We were so careful, no one will suspect a thing.
+[Message 14 - Rachel]: I took care of that too, Ben. Remember the guard's schedule we found online?
+[Message 23 - Ben]: I'll edit that part out and replace it with something innocuous.
+[Message 24 - Rachel]: Good thinking, Ben. I've finished cleaning up the lab too. No traces left behind.
+[Message 29 - Ben]: I just saw the autopsy report. The cause of death was indeed poisoning by our concoction.
+[Message 38 - Rachel]: I've already taken care of that, Ben. No one will know anything about the victim's secrets.
+[Message 45 - Ben]: Excellent. Our freedom awaits us, Rach. Let's make our escape together.
+2 | Mens Rea | [Message 1 - Ben]: I can't believe we pulled it off, Rach. The poison was perfectly lethal and undetectable.
+[Message 2 - Rachel]: Agreed, Ben. We were so careful, no one will suspect a thing.
+[Message 3 - Ben]: How did you feel when you saw the victim collapse?
+[Message 4 - Rachel]: It was unexpected, but I felt a strange sense of relief. We did it, Ben. We're free now.
+[Message 13 - Ben]: Just one thing, Rach. How did you get past security without being noticed?
+[Message 14 - Rachel]: I took care of that too, Ben. Remember the guard's schedule we found online?
+[Message 16 - Rachel]: It's all about planning and execution, Ben. We make a good team.
+[Message 23 - Ben]: I'll edit that part out and replace it with something innocuous. It won't raise any suspicion.
+[Message 25 - Ben]: Perfect. Let's wait for the autopsy report to come out. That should confirm our suspicions about the poison.
+[Message 27 - Ben]: Smart move. Let's hope they don't catch on to anything soon.
+[Message 28 - Rachel]: They won't, Ben. We've covered our tracks well.
+[Message 29 - Ben]: I just saw the autopsy report. The cause of death was indeed poisoning by our concoction.
+[Message 31 - Ben]: Indeed it did. But we must remain cautious, Rach. We don't want to be caught.
+[Message 32 - Rachel]: Of course, Ben. I won't let anything slip up now that we're so close to freedom.
+[Message 37 - Ben]: Just one thing, Rach. What if someone starts asking questions about the victim's past?
+[Message 38 - Rachel]: I've already taken care of that, Ben. No one will know anything about the victim's secrets.
+[Message 41 - Ben]: Indeed we do. I can't wait for our escape, Rach. It's been a long time coming.
+[Message 42 - Rachel]: Me too, Ben. Our freedom is just around the corner.
+[Message 43 - Ben]: Let's make sure our plan goes off without a hitch, Rach. We don't want any surprises at this point.
+[Message 45 - Ben]: Excellent. Our freedom awaits us, Rach. Let's make our escape together.
