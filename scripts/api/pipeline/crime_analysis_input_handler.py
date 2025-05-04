@@ -26,7 +26,17 @@ class CrimeAnalysisInputsHandler:
             raise KeyError("Expected 'input_files' or 'input_file' in inputs")
 
     def _save_input_to_tempfile(self, file_input) -> Path:
-        temp = tempfile.NamedTemporaryFile(delete=False)
+        # figure out the original filename or path so we can keep its suffix
+        if hasattr(file_input, "path"):
+            original = file_input.path
+        elif hasattr(file_input, "filename"):
+            original = file_input.filename
+        else:
+            original = ""
+        ext = Path(original).suffix  # e.g. ".csv", ".pdf", etc.
+
+        # create the temp file *with* the right suffix
+        temp = tempfile.NamedTemporaryFile(delete=False, suffix=ext)
         temp_path = Path(temp.name)
         try:
             if hasattr(file_input, "file"):

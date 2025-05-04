@@ -22,7 +22,6 @@ from flask_ml.flask_ml_server.models import (
     InputType,
 )
 from model_registry import load_model
-#from pipeline.file_loader import load_input_df
 from pipeline.crime_analysis_input_handler import CrimeAnalysisInputsHandler
 from pipeline.inference_runner import process_conversations
 import pandas as pd
@@ -46,7 +45,7 @@ def get_inference_engine():
 
 # Define the model type
 class ModelType(str, Enum):
-    GEMMA3   = "GEMMA3"
+    GEMMA3    = "GEMMA3"
     MISTRAL7B = "MISTRAL7B"
 
 # Define input and parameter types for Flask ML
@@ -80,8 +79,8 @@ def create_crime_analysis_task_schema() -> TaskSchema:
     """
     input_schema = InputSchema(
         key="input_files",
-        label="CSV files containing conversations",
-        input_type=InputType.BATCHFILE, 
+        label="Files containing conversations (CSV, XLSX, TXT, PDF)",
+        input_type=InputType.BATCHFILE,
     )
     output_schema = InputSchema(
         key="output_file",
@@ -92,7 +91,7 @@ def create_crime_analysis_task_schema() -> TaskSchema:
     elements_of_crime_schema = ParameterSchema(
         key="elements_of_crime",
         label="Elements of Crime",
-        subtitle="Elements of Crime to be found in the Conversation",
+        subtitle="Comma-separated list of crime elements",
         value=TextParameterDescriptor(
             default="Actus Reus,Mens Rea"
         )
@@ -112,8 +111,8 @@ def create_crime_analysis_task_schema() -> TaskSchema:
     )
     
     return TaskSchema(
-        inputs=[input_schema,output_schema],  # Only input is the CSV file
-        parameters=[elements_of_crime_schema,model_schema]
+        inputs=[input_schema, output_schema],
+        parameters=[elements_of_crime_schema, model_schema]
     )
 
 # Add application metadata
@@ -128,16 +127,17 @@ server.add_app_metadata(
 @server.route("/analyze", task_schema_func=create_crime_analysis_task_schema, short_title=" Message Analysis", order=0)
 def analyze_conversations(inputs: CrimeAnalysisInputs, parameters: CrimeAnalysisParameters) -> ResponseBody:
     """
-    Process a CSV file containing conversations, extract criminal activities, and save results.
+    Process input files containing conversations, extract criminal activities, and save results.
     """
     temp_file = None 
     RESULTS_DIR = Path(inputs["output_file"].path)
 
     try:
-        # Extract the csv into a dataframe
+        # Load and concatenate conversations from various file types
         handler = CrimeAnalysisInputsHandler(inputs)
-        df = handler.load_input_df()  # DataFrame with a "conversation" column
-        #df = load_input_df(inputs)
+        conversations = handler.load_conversations()
+        df = pd.DataFrame({"conversation": conversations})
+
         crime_elements = parameters.get("elements_of_crime", "Actus Reus,Mens Rea")
         raw_model_type = parameters.get("model_type", ModelType.MISTRAL7B.value).upper()
 
@@ -146,30 +146,24 @@ def analyze_conversations(inputs: CrimeAnalysisInputs, parameters: CrimeAnalysis
         except ValueError:
             raise ValueError(f"model_type must be one of {[m.value for m in ModelType]}")
 
-        file_response = process_conversations(df, inputs["output_file"].path, crime_elements, model_type) 
+        file_response = process_conversations(
+            df, 
+            inputs["output_file"].path, 
+            crime_elements, 
+            model_type
+        )
         return ResponseBody(file_response)
+
     except Exception as e:
-        logger.error(f"Error analyzing conversations: {str(e)}")
-        
-        # Create error log file
-        error_file = Path("error_log.txt")
-        if RESULTS_DIR:
-            error_file = RESULTS_DIR / "error_log.txt"
+        logger.error(f"Error analyzing conversations: {e}")
+        # Write error details to log file
+        error_file = RESULTS_DIR / "error_log.txt"
         with open(error_file, "w") as f:
-            f.write(f"Error: {str(e)}\n")
-            f.write(f"Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
-            f.write("\nStack trace:\n")
+            f.write(f"Error: {e}\nTimestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n")
             f.write(traceback.format_exc())
-        file_response = ResponseBody(FileResponse(path=str(error_file), file_type=FileType.TEXT))
-        return file_response
-    finally:
-        # Clean up the temporary file
-        if temp_file and os.path.exists(temp_file.name):
-            try:
-                os.unlink(temp_file.name)
-                logger.info(f"Removed temporary file: {temp_file.name}")
-            except Exception as e:
-                logger.warning(f"Failed to remove temporary file: {str(e)}")
+
+        file_response = FileResponse(path=str(error_file), file_type=FileType.TEXT)
+        return ResponseBody(file_response)
 
 @server.app.route("/", methods=["GET"])
 def root():
