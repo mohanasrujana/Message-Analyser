@@ -20,6 +20,9 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
     
     if use_case == 1:
         crime_element = "Actus Reus"
+        definition = '''**Definitions:**
+
+        * **Actus Reus (Guilty Act):** This refers to the physical act of committing a crime. It's the tangible, observable action that constitutes the criminal offense.'''
         no_element_response = "No. There is no element of Actus Reus in the conversation."
         gold_example = """
         GOLD EXAMPLE:
@@ -38,6 +41,7 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
     
     elif use_case == 2:
         crime_element = "Mens Rea"
+        definition = '''* **Mens Rea (Guilty Mind):** This refers to the mental state of the perpetrator at the time the crime was committed. It encompasses the intention, knowledge, or recklessness that the person had when performing the act. In essence, it's about proving that the person knew what they were doing was wrong.'''
         no_element_response = "No. There is no element of Mens Rea in the conversation."
         gold_example = """
         GOLD EXAMPLE:
@@ -56,6 +60,7 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
     
     elif use_case == 3:
         crime_element = custom_prompt if custom_prompt else "Relevant Messages"
+        definition = ""
         no_element_response = "No. There is no message that matches the prompt in the given conversation."
         gold_example = f"""
         GOLD EXAMPLE:
@@ -77,12 +82,11 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
     else:
         raise ValueError(f"Invalid use_case: {use_case}. Must be 1 (Actus Reus), 2 (Mens Rea), or 3 (Custom Prompt).")
     
-    # Build final prompt
     prompt = f"""
     You are a forensic conversation analyst specializing in detecting **{crime_element}** from chat conversations.
 
     Your job is to carefully read the conversation and extract only the messages that match the definition of {crime_element}.
-
+    {definition}
     ---
 
     DO NOT:
