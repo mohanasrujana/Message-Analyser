@@ -4,15 +4,17 @@ from pathlib import Path
 import pandas as pd
 from fpdf import FPDF
 import unicodedata
-
+from flask_ml.flask_ml_server.models import DirectoryInput
 class OutputParser:
-    def __init__(self, output_dir: str, output_file_type: str):
+    def __init__(self, output_dir: DirectoryInput , output_file_type: str):
+      
         self.output_dir = output_dir
         self.output_file_type = output_file_type
-        self.result_dir = Path(output_dir)
+        self.result_dir = Path(output_dir.path)
         self.result_dir.mkdir(parents=True, exist_ok=True)
 
     def process_raw_output(self, raw_output_list):
+
         results = []
         for i, raw_output in enumerate(raw_output_list):
             print(raw_output)
@@ -20,7 +22,7 @@ class OutputParser:
             print(curr_result)
             results.append(curr_result)
 
-        self.save_to_file(results)
+        return self.save_to_file(results)
     
     def parse_results_grouped(self, model_output: str, conversation_id: int, chunk_id: int) -> Dict[str, List[Dict]]:
         """
@@ -86,7 +88,7 @@ class OutputParser:
         
         df = pd.DataFrame(rows)
         
-        output_base = self.result_dir / "parsed_output"
+        output_base = self.result_dir / "analysis_of_conversations"
         if self.output_file_type.lower() == "csv":
             df.to_csv(output_base.with_suffix('.csv'), index=False)
         elif self.output_file_type.lower() == "xlsx":

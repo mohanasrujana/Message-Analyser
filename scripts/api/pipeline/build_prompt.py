@@ -19,6 +19,9 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
     
     if use_case == 1:
         crime_element = "Actus Reus"
+        definition = '''**Definitions:**
+
+        * **Actus Reus (Guilty Act):** This refers to the physical act of committing a crime. It's the tangible, observable action that constitutes the criminal offense.'''
         no_element_response = "No. There is no element of Actus Reus in the conversation."
         rule = """
         - ONLY include messages that contain **concrete or likely physical actions** involved in the criminal act."""
@@ -48,6 +51,7 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
         """
     elif use_case == 2:
         crime_element = "Mens Rea"
+        definition = '''* **Mens Rea (Guilty Mind):** This refers to the mental state of the perpetrator at the time the crime was committed. It encompasses the intention, knowledge, or recklessness that the person had when performing the act. In essence, it's about proving that the person knew what they were doing was wrong.'''
         no_element_response = "No. There is no element of Mens Rea in the conversation."
         definition = "Mens Rea refers to the mental state or intent to commit a crime — such as planning, desire, awareness, knowledge of wrongdoing, or willingness to cause harm."
         rule = """
@@ -84,6 +88,7 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
     
     elif use_case == 3:
         crime_element = custom_prompt if custom_prompt else "Relevant Messages"
+        definition = ""
         no_element_response = "No. There is no message that matches the prompt in the given conversation."
         gold_example = f"""
         GOLD EXAMPLE:
@@ -105,19 +110,12 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
     else:
         raise ValueError(f"Invalid use_case: {use_case}. Must be 1 (Actus Reus), 2 (Mens Rea), or 3 (Custom Prompt).")
     
-    # Build final prompt
-    if use_case == 1 or use_case == 2:
-        prompt = f"""
-        You are a forensic conversation analyst specializing in detecting {crime_element} from chat conversations.
-        {crime_element} Definition: {definition}
-        Your job is to carefully read the conversation and extract only the messages that match the definition of {crime_element}.
+    prompt = f"""
+    You are a forensic conversation analyst specializing in detecting **{crime_element}** from chat conversations.
 
-        ---
-
-        DO NOT:
-        - Do NOT paraphrase, summarize, or explain.
-        - Do NOT guess or assume hidden meanings beyond what is stated.
-        - Do NOT include observations, interpretations, or conclusions.{rule}
+    Your job is to carefully read the conversation and extract only the messages that match the definition of {crime_element}.
+    {definition}
+    ---
 
         ---
         {include}
@@ -150,52 +148,6 @@ def build_prompt(conversation: str, use_case: int, custom_prompt: str = None) ->
 
         ---
         Extract your output below:
-        """
-    elif use_case == 3:
-        prompt = f"""
-        You are a forensic conversation analyst. Your job is to analyze chat conversations and extract only the messages that match the user’s specific instruction.
-        
-        ---
-        USER INSTRUCTION:
-        {custom_prompt}  
-
-        ---
-
-        DO NOT:
-        - Do NOT paraphrase, summarize, or explain.
-        - Do NOT guess or assume hidden meanings beyond what is stated.
-        - Do NOT include interpretations, opinions, or conclusions.
-        - ONLY include exact messages that clearly satisfy the user instruction.
-
-        ---
-
-        STRICT OUTPUT FORMAT:
-        Yes. Evidence:
-        Relevant Messages:
-        [Message X - Name]: <exact message text>
-        [Message Y - Name]: <exact message text>
-
-        If no relevant messages are found, output exactly:
-        No. There is no message that matches the instruction in the given conversation.
-
-        ---
-
-        INCORRECT FORMATS (DO NOT DO THIS):
-        - Relevant Messages: They probably meant something related.
-        - Relevant Messages: Someone sounded off.
-        - Any summaries, assumptions, or paraphrased content.
-
-        {gold_example}
-
-        ---
-
-        Now analyze the following conversation:
-
-        {conversation}
-
-        ---
-        Extract your output below:
-        ---
         """
     
     return prompt
