@@ -1,4 +1,3 @@
-from collections import defaultdict
 import re
 from typing import List, Dict
 from pathlib import Path
@@ -46,7 +45,7 @@ class OutputParser:
                 stripped_line = line.strip()
                 if stripped_line:
                     category_match = re.match(r"^(.*?):$", stripped_line)
-                    message_match = re.match(r"^\[Message\s+(\d+)\s*-\s*(.*?)\]:\s*(.*)", stripped_line)
+                    message_match = re.match(r"^\[?Message\s+(\d+)\s*[-:]?\s*(.*?)\]?:?\s*(.*)", stripped_line, re.IGNORECASE)
 
                     if category_match: # This essentially stores the prompt/category of the messages [Actus Reus, Mens Rea]
                         result["Evidence"]["category"] = category_match.group(1)
