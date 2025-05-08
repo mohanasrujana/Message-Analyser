@@ -146,10 +146,15 @@ def analyze_conversations(inputs: message_analyser_inputs , parameters:Message_a
         outputs.process_raw_output(list_of_raw_outputs)
         logger.info(f"Analysis completed in {time.time() - start_time:.2f}s.")
         
-        output_base = Path(output_dir.path)/ "analysis_of_conversations"
-        file_response = FileResponse(path=str(output_base), file_type=map_outputfiletype_FileType(output_type))
-        
-        return ResponseBody(file_response)
+        output_base = Path(output_dir.path) / f"analysis_of_conversations.{output_type}"
+        print(f"Results saved to: {output_base}\n")
+
+        file_resp = FileResponse(
+            path=str(output_base),
+            file_type=map_outputfiletype_FileType(output_type),
+        )
+        return ResponseBody(file_resp)
+
     
     except Exception as e:
         logger.error(f"Error analyzing conversations: {str(e)}")

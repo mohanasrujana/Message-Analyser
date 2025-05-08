@@ -148,6 +148,9 @@ def build_prompt(conversation: str, use_case: str, custom_prompt: str = None) ->
 
 def process_conversations(model_name,list_of_conversations,usecase,custom_prompt="") -> list:
     
+    if model_name == "MISTRAL7B":
+        model_name = "mistral:7b-instruct"
+
     engine = Model(model_name)
     engine.load_model()
     
