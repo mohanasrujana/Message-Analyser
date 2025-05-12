@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from functools import lru_cache
 import ollama
-from pipeline.Models import Model
+from scripts.api.pipeline.Models import Model
 from flask_ml.flask_ml_server.models import (
     FileResponse, FileType
 )

@@ -1,5 +1,4 @@
-conversation_id,conversation
-1,"[Message 1 - Ben]: I can't believe we pulled it off, Rach. The poison was perfectly lethal and undetectable.
+[Message 1 - Ben]: I can't believe we pulled it off, Rach. The poison was perfectly lethal and undetectable.
    [Message 2 - Rachel]: Agreed, Ben. We were so careful, no one will suspect a thing.
    [Message 3 - Ben]: How did you feel when you saw the victim collapse?
    [Message 4 - Rachel]: It was unexpected, but I felt a strange sense of relief. We did it, Ben. We're free now.
@@ -48,4 +47,4 @@ conversation_id,conversation
 
    [Message 43 - Ben]: Let's make sure our plan goes off without a hitch, Rach. We don't want any surprises at this point.
    [Message 44 - Rachel]: Agreed, Ben. I'll be ready when you are.
-   [Message 45 - Ben]: Excellent. Our freedom awaits us, Rach. Let's make our escape together."
+   [Message 45 - Ben]: Excellent. Our freedom awaits us, Rach. Let's make our escape together.
