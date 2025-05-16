@@ -30,7 +30,7 @@ ollama pull gemma3:12b
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/mohanasrujana/Message-Analyzer.git
+git clone https://github.com/mohanasrujana/Message-Analyser.git
 cd Message-Analyzer
 ```
 
